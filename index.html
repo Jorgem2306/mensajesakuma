@@ -4,174 +4,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aku & Friends | Expedientes Revelados</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background: #0a0608;
-            color: #f0e6e6;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding: 30px 15px;
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 650px;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 25px;
-            border-bottom: 1px solid #3b1419;
-            padding-bottom: 15px;
-        }
-
-        h1 {
-            color: #e50914;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-size: 1.8rem;
-            text-shadow: 0 0 10px rgba(229, 9, 20, 0.4);
-        }
-
-        p.subtitle {
-            font-style: italic;
-            color: #9e8d8f;
-            margin-top: 5px;
-            font-size: 0.95rem;
-        }
-
-        .toolbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .contador {
-            font-size: 0.85rem;
-            color: #9e8d8f;
-        }
-
-        .btn-refresh {
-            background: #140b0e;
-            border: 1px solid #8b0000;
-            color: #fff;
-            padding: 6px 14px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: background 0.2s;
-        }
-
-        .btn-refresh:hover {
-            background: #e50914;
-        }
-
-        .item {
-            background: #140b0e;
-            border-left: 3px solid #e50914;
-            padding: 16px 18px;
-            margin-bottom: 14px;
-            border-radius: 0 6px 6px 0;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-        }
-
-        .fecha {
-            font-size: 0.78rem;
-            color: #8b7d7f;
-            margin-bottom: 8px;
-        }
-
-        .texto {
-            white-space: pre-wrap;
-            line-height: 1.5;
-            font-size: 1rem;
-            color: #fff;
-        }
-
-        .status-msg {
-            text-align: center;
-            color: #9e8d8f;
-            padding: 40px 0;
-            font-style: italic;
-        }
-    </style>
+    <title>Aku & Friends Revelación</title>
+    <!-- Google Fonts for Modern Typography -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&family=JetBrains+Mono:wght@400;700&family=Creepster&family=Special+Elite&display=swap"
+        rel="stylesheet">
+    <!-- Enlace a estilos externos -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
+    <!-- Efecto de fondo animado -->
+    <div class="background-animation"></div>
+
+    <!-- Imágenes laterales -->
+    <div class="side-image image-left"></div>
+    <div class="side-image image-right"></div>
 
     <div class="container">
-        <header>
-            <h1>Aku & Friends</h1>
-            <p class="subtitle">«Expedientes Revelados • Al final todo sale a la luz»</p>
+        <header class="title-container">
+            <h1 class="horror-title">Aku & Friends</h1>
+            <p class="horror-subtitle">LA PURGA: TODO SALE A LA LUZ</p>
         </header>
 
         <div class="toolbar">
-            <span id="contador" class="contador">Cargando datos...</span>
-            <button class="btn-refresh" onclick="cargarMensajes()">Actualizar</button>
+            <div class="status-indicator">
+                <span class="pulse-dot"></span>
+                <span id="contador" class="contador-text">Inicializando sistema...</span>
+            </div>
         </div>
 
-        <div id="muro">
-            <div class="status-msg">Abriendo archivos...</div>
+        <div id="muro" class="muro-container">
+            <!-- El contenido se cargará vía JS -->
+            <div class="loader-container">
+                <div class="cyber-loader"></div>
+                <div class="status-msg">Desencriptando archivos...</div>
+            </div>
         </div>
     </div>
 
-    <script>
-        // Pega aquí la URL que termina en /exec de tu Apps Script
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyQjGWpp-9BT1mAkE0JDPJVegcCz4T6pQdPeIWnqIjh5W3b_1uY8Mj9T644XO4LKjNrbA/exec";
-
-        async function cargarMensajes() {
-            const muro = document.getElementById("muro");
-            const contador = document.getElementById("contador");
-
-            try {
-                const res = await fetch(SCRIPT_URL);
-                const data = await res.json();
-
-                if (!data || data.length === 0) {
-                    muro.innerHTML = '<div class="status-msg">No hay secretos revelados todavía.</div>';
-                    contador.textContent = "0 mensajes registrados";
-                    return;
-                }
-
-                contador.textContent = `${data.length} confesiones registradas`;
-
-                muro.innerHTML = data.map(item => `
-          <div class="item">
-            <div class="fecha">${escapeHtml(item.fecha)}</div>
-            <div class="texto">${escapeHtml(item.mensaje)}</div>
-          </div>
-        `).join("");
-
-            } catch (err) {
-                muro.innerHTML = '<div class="status-msg">Error al conectar con la base de datos.</div>';
-                contador.textContent = "Error";
-            }
-        }
-
-        function escapeHtml(str) {
-            return String(str || '').replace(/[&<>"']/g, m => ({
-                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-            })[m]);
-        }
-
-        // Carga inicial
-        cargarMensajes();
-
-        // Actualiza automáticamente cada 10 segundos
-        setInterval(cargarMensajes, 10000);
-    </script>
+    <!-- Enlace al script externo -->
+    <script src="script.js"></script>
 </body>
 
 </html>
